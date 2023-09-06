@@ -1,42 +1,95 @@
 <script>
+import {NewsApiService} from "./news/services/news-api.service.js";
+import SideMenu from "./news/components/side-menu.component.vue";
+import MainContent from "./news/components/main-content.component.vue";
+import UnavailableContent from "./news/components/unavailable-content.component.vue";
+import FooterContent from "./news/components/footer-content.component.vue";
+
+export default {
+  name: 'App',
+  components: {FooterContent, UnavailableContent, MainContent, SideMenu},
+  data() {
+    return {
+      sidebarVisible: false,
+      articles: [],
+      errors: [],
+      newsApi: new NewsApiService()
+    }
+  },
+  created() {
+    this.getArticlesForSource('bbc-news');
+  },
+  methods: {
+    getArticlesForSource(sourceId) {
+      this.newsApi.getArticlesForSource(sourceId)
+          .then(response => {
+            this.articles = response.data.articles;
+            console.log(response.data.articles);
+          })
+          .catch(e => {
+            this.errors.push(e);
+          });
+    },
+    // Fetch articles for selected Source with Logo URL
+    getArticlesForSourceWithUrl(source) {
+      this.newsApi.getArticlesForSource(source.id)
+          .then(response => {
+            this.articles = response.data.articles;
+            this.articles.map(article => article.source.urlToLogo
+                = source.urlToLogo);
+            console.log(response.data.articles);
+          })
+          .catch(e => {
+            this.errors.push(e);
+          });
+    },
+    // On Source selected
+    setSource(source) {
+      this.getArticlesForSourceWithUrl(source);
+      this.toggleSidebar();
+    },
+    toggleSidebar() {
+      this.sidebarVisible = !this.sidebarVisible;
+    }
+  }
+}
 </script>
 
 <template>
-  <header>
-
-    <div class="wrapper">
+  <div class="w-full">
+    <div>
+      <pv-menubar class="sticky bg-primary">
+        <template #start>
+          <pv-button label="CatchUp" icon="pi pi-bars"
+                     @click="toggleSidebar"></pv-button>
+          <side-menu v-model:visible="sidebarVisible"
+                     v-on:source-selected="setSource"></side-menu>
+        </template>
+        <template #end>
+        </template>
+      </pv-menubar>
     </div>
-  </header>
 
-  <main>
-  </main>
+    <div>
+      <div class="container">
+        <main-content v-if="errors" :articles="articles"></main-content>
+        <unavailable-content v-else :errors="errors"></unavailable-content>
+      </div>
+    </div>
+    <footer-content></footer-content>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Crea tres columnas de igual tamaño */
+  gap: 10px; /* Espacio entre los elementos */
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.container > div {
+  /* Establece estilos para cada div individual si es necesario */
+  padding: 10px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
