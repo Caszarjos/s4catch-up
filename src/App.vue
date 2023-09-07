@@ -82,14 +82,13 @@ export default {
 
 <style>
 .container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Crea tres columnas de igual tamaño */
-  gap: 10px; /* Espacio entre los elementos */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Crea tres columnas de igual tamaño */
+    gap: 10px; /* Espacio entre los elementos */
 }
-
 .container > div {
-  /* Establece estilos para cada div individual si es necesario */
-  padding: 10px;
+    /* Establece estilos para cada div individual si es necesario */
+    padding: 10px;
 }
 
 </style>

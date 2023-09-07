@@ -1,7 +1,7 @@
 <template>
   <pv-card class="m-2">
     <template #header>
-      <img :alt="article.title" :src="article.urlToImage">
+      <img class="width" :alt="article.title" :src="article.urlToImage">
     </template>
     <template #title>
       <p>{{ article.title }}</p>
@@ -36,5 +36,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.width{
+    max-width: 100%;
+}
 </style>
