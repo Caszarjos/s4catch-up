@@ -1,5 +1,6 @@
 <script>
 import {NewsApiService} from "../services/news-api.service.js";
+
 export default {
   name: "side-menu",
   props: {
@@ -13,13 +14,11 @@ export default {
     }
   },
   created() {
-    this.newsApi.getArticlesForSource()
+    this.newsApi.getSource()
         .then(response => {
           this.sources = response.data.sources;
           this.sources.map(source => source.urlToLogo =
               this.newsApi.getUrlToLogo(source));
-          console.log('data: ');
-          console.log(response.data.sources);
         })
         .catch(e => this.errors.push(e));
   },
@@ -40,16 +39,13 @@ export default {
     <div v-for="source in sources" class="m-4">
       <div @click="onSourceSelected(source)"
            class="flex align-content-start flex-wrap">
-
         <span class="flex align-items-center justify-content-center mr-2">
-        <pv-avatar :image="source.urlToLogo"
-                   :aria-label="source.name" shape="circle"/>
+          <pv-avatar :image="source.urlToLogo"
+                     :aria-label="source.name" shape="circle"/>
         </span>
-
         <span class="flex align-items-center justify-content-center">
         {{ source.name }}
         </span>
-
       </div>
     </div>
   </pv-sidebar>

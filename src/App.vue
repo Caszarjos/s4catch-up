@@ -4,10 +4,11 @@ import SideMenu from "./news/components/side-menu.component.vue";
 import MainContent from "./news/components/main-content.component.vue";
 import UnavailableContent from "./news/components/unavailable-content.component.vue";
 import FooterContent from "./news/components/footer-content.component.vue";
+import LanguageSwitcher from "@/news/components/language-switcher.vue";
 
 export default {
   name: 'App',
-  components: {FooterContent, UnavailableContent, MainContent, SideMenu},
+  components: {LanguageSwitcher, FooterContent, UnavailableContent, MainContent, SideMenu},
   data() {
     return {
       sidebarVisible: false,
@@ -35,8 +36,9 @@ export default {
       this.newsApi.getArticlesForSource(source.id)
           .then(response => {
             this.articles = response.data.articles;
-            this.articles.map(article => article.source.urlToLogo
-                = source.urlToLogo);
+            this.articles.forEach(article => {
+                  article.source.urlToLogo = source.urlToLogo;
+            });
             console.log(response.data.articles);
           })
           .catch(e => {
@@ -66,6 +68,7 @@ export default {
                      v-on:source-selected="setSource"></side-menu>
         </template>
         <template #end>
+          <language-switcher></language-switcher>
         </template>
       </pv-menubar>
     </div>

@@ -1,7 +1,9 @@
 <template>
   <pv-card class="m-2">
     <template #header>
-      <img class="width" :alt="article.title" :src="article.urlToImage">
+      <img class="width"
+           :alt="article.title"
+           :src="article.urlToImage">
     </template>
     <template #title>
       <p>{{ article.title }}</p>
@@ -23,15 +25,18 @@
     </template>
 
     <template #footer>
+      <a :href="article.url" target="_blank">{{ $t('read-more') }}</a>
     </template>
   </pv-card>
 </template>
 
 <script>
+import {Article} from "@/news/model/article.entity";
+
 export default {
   name: "article-card",
   props: {
-    article: null,
+    article: Article,
   },
 }
 </script>
